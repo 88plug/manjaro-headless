@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 echo "Updating Manjaro"
-if [ -f reboot.log ];
+if [ -f reboot.log ]; done
 echo "Already upgraded packages"
 rm reboot.log
 else
