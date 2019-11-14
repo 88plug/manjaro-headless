@@ -7,6 +7,7 @@ Use host Console to install with default options.
 
 https://osdn.net/projects/manjaro/storage/xfce/18.1.1/minimal/manjaro-xfce-18.1.1-minimal-191025-linux53.iso/
 
+During install use the name "root" and user "root" for login to avoid unnecessary user account creation.
 
 # Enable ssh
 ```sudo systemctl enable sshd.service; sudo systemctl start sshd.service```
