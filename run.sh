@@ -17,7 +17,7 @@ echo "Using $location location for this install"
 #cp $location/run.sh /usr/local/bin/88plug_run.sh
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
-ExecStart=$(location)/run.sh
+ExecStart=$location/run.sh
 User=root
 [Install]
 WantedBy=default.target
