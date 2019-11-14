@@ -33,7 +33,7 @@ sleep 1
 reboot now
 fi
 
-if [ -f $location/reboot_1.log ]; then
+if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
   echo "Succesfully installed all packages"
   rm $location/reboot_1.log
   systemctl stop 88plug.service
