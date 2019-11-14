@@ -1,9 +1,28 @@
 #!/bin/bash
-echo "Let's get it going..."
+echo "Let's get it going...sit back, this will take a few minutes and 2 reboots."
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
+
+if [ -f /etc/systemd/system/88plug.service ]
+  then
+  echo "Found service"
+else
+echo "Setup installer for reboots"
+#location=$(pwd)
+cp run.sh /usr/local/bin/88plug_run.sh
+cat <<EOT > /etc/systemd/system/88plug.service
+[Service]
+ExecStart=/usr/local/bin/88plug_run.sh
+User=root
+[Install]
+WantedBy=default.target
+EOT
+systemctl start 88plug.service
+systemctl enable 88plug.service
+fi
+
 echo "Updating Manjaro"
 if [ -f reboot.log ]
   then
@@ -16,6 +35,13 @@ sleep 10
 touch reboot.log
 reboot now
 fi
+
+if [ -f reboot_1.log ]
+  then
+  echo "Already installed packages"
+  rm reboot1.log
+  rm /etc/systemd/system/88plug.service
+else
 echo "Enable SSH"
 systemctl enable sshd.service; systemctl start sshd.service
 echo "Removing GUI"
@@ -48,4 +74,8 @@ systemctl enable fail2ban.service
 echo "Starting and enabling the docker"
 systemctl start docker.service
 systemctl enable docker.service
-echo "..the going has been got.  Reboot!"
+echo "Rebooting now, run me again after reboot to continue!"
+sleep 10
+touch reboot.log
+reboot now
+fi
