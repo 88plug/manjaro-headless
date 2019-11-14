@@ -25,7 +25,7 @@ cat ~/.ssh/id_rsa.pub | ssh root@example.com 'cat - >> ~/.ssh/authorized_keys'
 
 # Step 4 (Optional/Add goodies and secure the beast.)
 ```
-sudo pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
+yes | sudo pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
 
 sudo ufw allow ssh
 sudo ufw limit ssh
