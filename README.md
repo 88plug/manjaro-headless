@@ -4,12 +4,10 @@ Use manjaro linux as a headless server
 # Step 1
 Upload the manjaro mininmal with xfce iso to Vultr or your hosting provider/server and install with default options
 
-# Step 2
-Enable ssh
+# Enable ssh
 ```sudo systemctl enable sshd.service; sudo systemctl start sshd.service```
 
-# Step 3
-Make it headless
+# Make it headless
 ```yes | sudo pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager```
 
 Copy your ssh keys to the server now
@@ -17,8 +15,7 @@ Copy your ssh keys to the server now
 ```mkdir ~/.ssh #needed for copying key```
 ```cat ~/.ssh/id_rsa.pub | ssh root@example.com 'cat - >> ~/.ssh/authorized_keys'```
 
-# Step 4 (Optional)
-Add goodies and secure the beast.
+# Step 4 (Optional/Add goodies and secure the beast.)
 ```
 sudo pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
 
