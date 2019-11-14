@@ -2,6 +2,7 @@
 echo "Let's get it going...sit back, this will take a few minutes and 2 reboots."
 echo "Do not login until the system reboots three times!"
 echo "This is a fully automated installer!"
+location=$(pwd)
 
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
@@ -9,11 +10,10 @@ if [ "$EUID" -ne 0 ]
 fi
 
 if [ -f /etc/systemd/system/88plug.service ]; then
-  echo "Found service"
+  echo "Found service and using $location location"
 else
 echo "Setup installer for reboots"
-location=$(pwd)
-echo "Using $location for this install"
+echo "Using $location location for this install"
 #cp $location/run.sh /usr/local/bin/88plug_run.sh
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
