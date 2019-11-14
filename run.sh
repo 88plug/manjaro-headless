@@ -39,7 +39,7 @@ fi
 if [ -f reboot_1.log ]
   then
   echo "Already installed packages"
-  rm reboot1.log
+  rm reboot_1.log
   rm /etc/systemd/system/88plug.service
 else
 echo "Enable SSH"
@@ -76,6 +76,6 @@ systemctl start docker.service
 systemctl enable docker.service
 echo "Rebooting now, run me again after reboot to continue!"
 sleep 10
-touch reboot.log
+touch reboot_1.log
 reboot now
 fi
