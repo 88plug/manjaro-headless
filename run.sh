@@ -18,7 +18,6 @@ echo "Using $location location for this install"
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
 WorkingDirectory=$location/
-Type=forking
 ExecStart=/bin/bash run.sh
 #ExecStart=/run.sh
 User=root
