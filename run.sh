@@ -14,35 +14,29 @@ if [ -f /etc/systemd/system/88plug.service ]
 else
 echo "Setup installer for reboots"
 location=$(pwd)
-cp run.sh /usr/local/bin/88plug_run.sh
+echo "Using $location for this install"
+#cp $location/run.sh /usr/local/bin/88plug_run.sh
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
-ExecStart=/usr/local/bin/88plug_run.sh
+ExecStart=$(location)/run.sh
 User=root
 [Install]
 WantedBy=default.target
 EOT
+echo "Enabling 88plug reboot service"
 systemctl start 88plug.service
 systemctl enable 88plug.service
-fi
-
 echo "Updating Manjaro"
-if [ -f $(pwd)/reboot.log ]
-  then
-  echo "Already upgraded packages"
-  rm $(pwd)/reboot.log
-else
 yes | pacman -Syu
 echo "Rebooting now, run me again after reboot to continue!"
 sleep 1
-touch $(pwd)/reboot.log
 reboot now
 fi
 
-if [ -f $(pwd)/reboot_1.log ]
+if [ -f $location/reboot_1.log ]
   then
-  echo "Already installed packages"
-  rm $(pwd)/reboot_1.log
+  echo "Succesfully installed all packages"
+  rm $location/reboot_1.log
   systemctl stop 88plug.service
   systemctl disable 88plug.service
   rm /etc/systemd/system/88plug.service
@@ -80,8 +74,8 @@ systemctl enable fail2ban.service
 echo "Starting and enabling the docker"
 systemctl start docker.service
 systemctl enable docker.service
-echo "Rebooting now, run me again after reboot to continue!"
+echo "Rebooting for the last time..."
 sleep 1
-touch $(pwd)/reboot_1.log
+touch $location/reboot_1.log
 reboot now
 fi
