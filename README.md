@@ -2,7 +2,7 @@
 Use manjaro linux as a headless server
 
 # Step 1
-Install manjaro mininmal with xfce
+Upload the manjaro mininmal with xfce iso to Vultr or your hosting provider/server and install with default options
 
 # Step 2
 Enable ssh
@@ -10,8 +10,8 @@ Enable ssh
 
 # Step 3
 Make it headless
-```sudo pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd```
-```sudo pacman -Rs lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager```
+```yes | sudo pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd```
+```yes | sudo pacman -Rs lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager```
 
 Copy your ssh keys to the server now
 
@@ -23,7 +23,10 @@ Add goodies and secure the beast.
 ```
 sudo pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
 
-cat <<EOT > /etc/fail2ban/jail.d/sshd.local
+sudo ufw allow ssh
+sudo ufw limit ssh
+
+sudo cat <<EOT > /etc/fail2ban/jail.d/sshd.local
 [sshd]
 enabled   = true
 filter    = sshd
