@@ -34,7 +34,7 @@ if [ -f $(pwd)/reboot.log ]
 else
 yes | pacman -Syu
 echo "Rebooting now, run me again after reboot to continue!"
-sleep 10
+sleep 1
 touch $(pwd)/reboot.log
 reboot now
 fi
@@ -81,7 +81,7 @@ echo "Starting and enabling the docker"
 systemctl start docker.service
 systemctl enable docker.service
 echo "Rebooting now, run me again after reboot to continue!"
-sleep 10
+sleep 1
 touch $(pwd)/reboot_1.log
 reboot now
 fi
