@@ -3,6 +3,7 @@ Use manjaro linux as a headless server
 
 # Step 1
 Upload the manjaro mininmal with xfce iso to Vultr or your hosting provider/server and install with default options
+https://osdn.net/projects/manjaro/storage/xfce/18.1.1/minimal/manjaro-xfce-18.1.1-minimal-191025-linux53.iso/
 
 # Enable ssh
 ```sudo systemctl enable sshd.service; sudo systemctl start sshd.service```
