@@ -5,7 +5,16 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 echo "Updating Manjaro"
+if [ -f reboot.log ];
+echo "Already upgraded packages"
+rm reboot.log
+else
 yes | pacman -Syu
+echo "Rebooting now, run me again after reboot to continue!"
+sleep 10
+touch reboot.log
+reboot now
+fi
 echo "Enable SSH"
 systemctl enable sshd.service; systemctl start sshd.service
 echo "Removing GUI"
@@ -14,6 +23,9 @@ echo "Make .ssh folder for keys"
 mkdir ~/.ssh 
 echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban"
 yes | pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
+echo "Docker user setup"
+groupadd docker
+usermod -aG docker $USER
 echo "Allow SSH"
 ufw allow ssh
 echo "Limit SSH"
