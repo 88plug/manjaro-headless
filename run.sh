@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Let's get it going..."
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
