@@ -1,5 +1,8 @@
 #!/bin/bash
 echo "Let's get it going...sit back, this will take a few minutes and 2 reboots."
+echo "Do not login until the system reboots three times!"
+echo "This is a fully automated installer!"
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -10,7 +13,7 @@ if [ -f /etc/systemd/system/88plug.service ]
   echo "Found service"
 else
 echo "Setup installer for reboots"
-#location=$(pwd)
+location=$(pwd)
 cp run.sh /usr/local/bin/88plug_run.sh
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
@@ -24,22 +27,22 @@ systemctl enable 88plug.service
 fi
 
 echo "Updating Manjaro"
-if [ -f reboot.log ]
+if [ -f $(pwd)/reboot.log ]
   then
   echo "Already upgraded packages"
-  rm reboot.log
+  rm $(pwd)/reboot.log
 else
 yes | pacman -Syu
 echo "Rebooting now, run me again after reboot to continue!"
 sleep 10
-touch reboot.log
+touch $(pwd)/reboot.log
 reboot now
 fi
 
-if [ -f reboot_1.log ]
+if [ -f $(pwd)/reboot_1.log ]
   then
   echo "Already installed packages"
-  rm reboot_1.log
+  rm $(pwd)/reboot_1.log
   systemctl stop 88plug.service
   systemctl disable 88plug.service
   rm /etc/systemd/system/88plug.service
@@ -79,6 +82,6 @@ systemctl start docker.service
 systemctl enable docker.service
 echo "Rebooting now, run me again after reboot to continue!"
 sleep 10
-touch reboot_1.log
+touch $(pwd)/reboot_1.log
 reboot now
 fi
