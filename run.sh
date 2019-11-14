@@ -8,8 +8,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-if [ -f /etc/systemd/system/88plug.service ]
-  then
+if [ -f /etc/systemd/system/88plug.service ]; then
   echo "Found service"
 else
 echo "Setup installer for reboots"
@@ -33,8 +32,7 @@ sleep 1
 reboot now
 fi
 
-if [ -f $location/reboot_1.log ]
-  then
+if [ -f $location/reboot_1.log ]; then
   echo "Succesfully installed all packages"
   rm $location/reboot_1.log
   systemctl stop 88plug.service
