@@ -40,7 +40,10 @@ if [ -f reboot_1.log ]
   then
   echo "Already installed packages"
   rm reboot_1.log
+  systemctl start 88plug.service
+  systemctl enable 88plug.service
   rm /etc/systemd/system/88plug.service
+  echo "88plug cleaned up."
 else
 echo "Enable SSH"
 systemctl enable sshd.service; systemctl start sshd.service
