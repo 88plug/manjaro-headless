@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Let's get it going...sit back, this will take a few minutes and 2 reboots."
-echo "Do not login until the system reboots three times!"
+echo "Do not try to login until the system reboots two times!"
 echo "This is a fully automated installer!"
 
 if [ "$EUID" -ne 0 ]
@@ -9,16 +9,17 @@ if [ "$EUID" -ne 0 ]
 fi
 
 if [ -f /etc/systemd/system/88plug.service ]; then
-  echo "Found service and using $location location"
+    echo "Found reboot service configuration already installed."
 else
 location=$(pwd)
 echo "${location}" > location.log
 echo "Setup installer for reboots"
 echo "Using $location location for this install"
-cp $location/run.sh /usr/local/bin/88plug_run.sh
+#cp $location/run.sh /usr/local/bin/88plug_run.sh
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
-ExecStart=/usr/local/bin/88plug_run.sh
+WorkingDirectory=$location
+ExecStart=$location/run.sh
 User=root
 [Install]
 WantedBy=default.target
@@ -35,7 +36,6 @@ fi
 
 if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
   echo "Succesfully installed all packages"
-  rm $location/reboot_1.log
   systemctl stop 88plug.service
   systemctl disable 88plug.service
   rm /etc/systemd/system/88plug.service
@@ -74,7 +74,5 @@ echo "Starting and enabling the docker"
 systemctl start docker.service
 systemctl enable docker.service
 echo "Rebooting for the last time..."
-sleep 1
-touch $location/reboot_1.log
 reboot now
 fi
