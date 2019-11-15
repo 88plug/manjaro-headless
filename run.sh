@@ -92,6 +92,7 @@ rm -f /etc/systemd/system/88plug.service
 rm *.log
 echo "Rebooting for the last time..."
 ufw --force enable
-echo "You can login after this reboot"
+echo "You can login after this reboot - don't forget to set your hostname with : sudo hostnamectl set-hostname deathstar"
 reboot now
+
 fi
