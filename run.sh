@@ -30,7 +30,7 @@ User=root
 WantedBy=default.target
 EOT
 echo "Enabling 88plug reboot service"
-systemctl start 88plug.service
+#systemctl start 88plug.service
 systemctl enable 88plug.service
 echo "Updating Manjaro"
 yes | pacman -Syu
