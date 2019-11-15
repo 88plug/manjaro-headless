@@ -44,8 +44,8 @@ pacman-mirrors --geoip ; yes | pacman -Syyu
 echo "Remember current user before reboot"
 u="$USER"
 echo "${u}" > user.log
-echo "Rebooting now, run me again after reboot to continue!"
-sleep 5
+echo "Rebooting now..."
+sleep 3
 reboot now
 fi
 
