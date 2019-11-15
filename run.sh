@@ -1,7 +1,11 @@
 #!/bin/bash
-echo "Let's get it going...sit back, this will take a few minutes and 2 reboots."
+echo "Let's get it going...sit back, this will take a few minutes to update and reboot twice."
+echo "SSH will be enabled on the host and the console will not show any display after the second reboot."
+echo "Once the installer finishes, login with ssh to the new headless machine with the user you created during install."
+sleep 15
 echo "Do not try to login until the system reboots two times!"
 echo "This is a fully automated installer!"
+sleep 5
 
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
@@ -20,7 +24,6 @@ location=$(pwd)
 echo "${location}" > location.log
 echo "Setup installer for reboots"
 echo "Using $location location for this install"
-#cp $location/run.sh /usr/local/bin/88plug_run.sh
 cat <<EOT > /etc/systemd/system/88plug.service
 [Service]
 WorkingDirectory=$location
@@ -30,12 +33,11 @@ User=root
 WantedBy=default.target
 EOT
 echo "Enabling 88plug reboot service"
-#systemctl start 88plug.service
 systemctl enable 88plug.service
 echo "Updating Manjaro"
 yes | pacman -Syu
 echo "Rebooting now, run me again after reboot to continue!"
-sleep 1
+sleep 5
 reboot now
 fi
 
