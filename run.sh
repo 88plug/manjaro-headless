@@ -93,6 +93,5 @@ rm *.log
 echo "Rebooting for the last time..."
 ufw --force enable
 echo "You can login after this reboot"
-sleep 5
 reboot now
 fi
