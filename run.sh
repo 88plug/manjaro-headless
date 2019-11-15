@@ -82,5 +82,8 @@ systemctl stop 88plug.service
 systemctl disable 88plug.service
 rm -f /etc/systemd/system/88plug.service
 echo "Rebooting for the last time..."
+ufw --force enable
+echo "You can login after this reboot"
+sleep 5
 reboot now
 fi
