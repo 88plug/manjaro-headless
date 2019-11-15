@@ -39,8 +39,6 @@ WantedBy=default.target
 EOT
 echo "Enabling 88plug reboot service"
 systemctl enable 88plug.service
-echo "Updating Manjaro Mirrors"
-pacman-mirrors --geoip
 echo "Updating mirrors and Manjaro"
 pacman-mirrors --geoip ; yes | pacman -Syyu
 echo "Remember current user before reboot"
