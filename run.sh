@@ -8,6 +8,11 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+if [ -f /var/lib/pacman/db.lck ]; then
+  echo "Cannot continue until pacman is done with updates, please run again after background updates have completed."
+  exit
+fi
+
 if [ -f /etc/systemd/system/88plug.service ]; then
     echo "Found reboot service configuration already installed."
 else
