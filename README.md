@@ -12,3 +12,11 @@ During install use the name "root" and user "root" for login to avoid unnecessar
 # Run the automated installer
 
 ```git clone https://github.com/88plug/manjaro-headless ; cd manjaro-headless ; sudo ./run.sh```
+
+# Need a VPS that supports custom ISO?
+
+Get $50 of free hosting with Vultr!
+http://s.88plug.com/vultr
+
+or try HostHatch (NVMe supported!)
+http://s.88plug.com/hosthatch
