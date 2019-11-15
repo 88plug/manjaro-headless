@@ -1,5 +1,4 @@
 #!/bin/bash
-
 if [ -f ./notice.log ]; then
   echo "Skipping notice"
 else
@@ -44,6 +43,8 @@ echo "Updating Manjaro Mirrors"
 pacman-mirrors --geoip
 echo "Updating Manjaro"
 yes | pacman -Syu
+u="$USER"
+echo "${u}" > user.log
 echo "Rebooting now, run me again after reboot to continue!"
 sleep 5
 reboot now
@@ -63,7 +64,7 @@ echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw
 yes | pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
 echo "Docker user setup"
 groupadd docker
-usermod -aG docker $USER
+usermod -aG docker $(cat user.log)
 echo "Allow SSH"
 ufw allow ssh
 echo "Limit SSH"
