@@ -41,8 +41,9 @@ echo "Enabling 88plug reboot service"
 systemctl enable 88plug.service
 echo "Updating Manjaro Mirrors"
 pacman-mirrors --geoip
-echo "Updating Manjaro"
-yes | pacman -Syu
+echo "Updating mirrors and Manjaro"
+pacman-mirrors --geoip ; yes | pacman -Syyu
+echo "Remember current user before reboot"
 u="$USER"
 echo "${u}" > user.log
 echo "Rebooting now, run me again after reboot to continue!"
