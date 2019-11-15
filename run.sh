@@ -1,4 +1,8 @@
 #!/bin/bash
+
+if [ -f ./notice.log ]; then
+  echo "Skipping notice"
+else
 echo "Let's get it going...sit back, this will take a few minutes to update and reboot twice."
 echo "SSH will be enabled on the host and the console will not show any display after the second reboot."
 echo "Once the installer finishes, login with ssh to the new headless machine with the user you created during install."
@@ -6,6 +10,8 @@ sleep 15
 echo "Do not try to login until the system reboots two times!"
 echo "This is a fully automated installer!"
 sleep 5
+touch notice.log
+fi
 
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
@@ -81,6 +87,7 @@ echo "Cleaning up"
 systemctl stop 88plug.service
 systemctl disable 88plug.service
 rm -f /etc/systemd/system/88plug.service
+rm *.log
 echo "Rebooting for the last time..."
 ufw --force enable
 echo "You can login after this reboot"
