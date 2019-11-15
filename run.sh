@@ -41,9 +41,6 @@ fi
 
 if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
   echo "Succesfully installed all packages"
-  systemctl stop 88plug.service
-  systemctl disable 88plug.service
-  rm /etc/systemd/system/88plug.service
   echo "88plug cleaned up."
 else
 echo "Enable SSH"
@@ -78,6 +75,10 @@ systemctl enable fail2ban.service
 echo "Starting and enabling the docker"
 systemctl start docker.service
 systemctl enable docker.service
+echo "Cleaning up"
+systemctl stop 88plug.service
+systemctl disable 88plug.service
+rm -f /etc/systemd/system/88plug.service
 echo "Rebooting for the last time..."
 reboot now
 fi
