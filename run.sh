@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
 if [ -f ./notice.log ]; then
   echo "Skipping notice"
 else
@@ -10,11 +15,6 @@ echo "Do not try to login until the system reboots two times!"
 echo "This is a fully automated installer!"
 sleep 5
 touch notice.log
-fi
-
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
 fi
 
 if [ -f /var/lib/pacman/db.lck ]; then
