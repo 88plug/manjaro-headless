@@ -54,6 +54,9 @@ fi
 
 if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
   echo "Succesfully installed all packages"
+  yes | sudo pacman -Scc
+  yes | sudo pacman -Rns $(pacman -Qtdq)
+  sudo journalctl --vacuum-size=50M
   echo "88plug cleaned up."
 else
 echo "Enable SSH"
@@ -71,6 +74,8 @@ echo "Allow SSH"
 ufw allow ssh
 echo "Limit SSH"
 ufw limit ssh
+echo "Rotate logs at 50M"
+sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journald.conf
 echo "Setup jail for naughty SSH attempts"
 cat <<EOT > /etc/fail2ban/jail.d/sshd.local
 [sshd]
