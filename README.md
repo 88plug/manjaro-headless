@@ -13,8 +13,8 @@ https://osdn.net/projects/manjaro/storage/xfce/18.1.1/minimal/manjaro-xfce-18.1.
 
 # Need a VPS that supports custom ISO?
 
-Get $50 of free hosting with Vultr!
-http://s.88plug.com/vultr
+Get $50 of free hosting with Vultr! - Confirmed working!
+https://m.do.co/c/d9874e8ceba7
 
-or try HostHatch (NVMe supported!)
-http://s.88plug.com/hosthatch
+or try HostHatch (NVMe supported!)- Confirmed working!
+https://hosthatch.com/a?id=1577
