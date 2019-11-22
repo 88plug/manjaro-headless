@@ -30,6 +30,9 @@ echo "${location}" > location.log
 echo "Setup installer for reboots"
 echo "Using $location location for this install"
 cat <<EOT > /etc/systemd/system/88plug.service
+[Unit]
+Requires=network-online.target systemd-networkd-wait-online.service
+After=network-online.target systemd-networkd-wait-online.service
 [Service]
 WorkingDirectory=$location
 ExecStart=$location/run.sh
