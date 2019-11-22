@@ -19,6 +19,6 @@ https://m.do.co/c/d9874e8ceba7
 or try HostHatch (NVMe supported!)- Confirmed working!
 https://hosthatch.com/a?id=1577
 
-# Found this helpful?  Buy me a coffee...
+# Found this helpful?
 
 <a href="https://www.buymeacoffee.com/88plug" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" style="height: 51px !important;width: 217px !important;" ></a>
