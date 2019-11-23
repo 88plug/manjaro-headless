@@ -66,7 +66,7 @@ yes | pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-p
 echo "Make .ssh folder for keys"
 mkdir ~/.ssh 
 echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban"
-yes | pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban
+yes | pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban git base-devel
 echo "Docker user setup"
 groupadd docker
 usermod -aG docker $(cat user.log)
