@@ -45,7 +45,7 @@ systemctl enable 88plug.service
 echo "Updating mirrors and Manjaro"
 pacman-mirrors --geoip ; yes | pacman -Syyu
 echo "Remember current user before reboot"
-u=$(who am i | awk '{print $1}')
+u=$(ps -o user= -p $$ | awk '{print $1}')
 echo "${u}" > user.log
 echo "Rebooting now..."
 sleep 3
