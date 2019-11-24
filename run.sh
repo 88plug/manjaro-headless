@@ -57,6 +57,10 @@ if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
   yes | sudo pacman -Scc
   yes | sudo pacman -Rns $(pacman -Qtdq)
   sudo journalctl --vacuum-size=50M
+  systemctl disable 88plug.service
+  systemctl stop 88plug.service
+  rm /etc/systemd/system/88plug.service
+  rm *.log
   echo "88plug cleaned up."
 else
 echo "Enable SSH"
@@ -95,11 +99,6 @@ systemctl enable fail2ban.service
 echo "Starting and enabling the docker"
 systemctl start docker.service
 systemctl enable docker.service
-echo "Cleaning up"
-systemctl stop 88plug.service
-systemctl disable 88plug.service
-rm -f /etc/systemd/system/88plug.service
-rm *.log
 echo "Rebooting for the last time..."
 ufw --force enable
 echo "You can login after this reboot - don't forget to set your hostname with : sudo hostnamectl set-hostname deathstar"
