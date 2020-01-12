@@ -5,7 +5,7 @@ Use manjaro linux as a headless server
 Upload the Manjaro Minimal with XFCE ISO to Vultr or your hosting provider/server and 
 Use host Console to install with default options.
 
-https://osdn.net/projects/manjaro/storage/xfce/18.1.1/minimal/manjaro-xfce-18.1.1-minimal-191025-linux53.iso/
+https://osdn.net/dl/manjaro/manjaro-xfce-18.1.5-minimal-191229-linux54.iso.torrent
 
 # Run the automated installer
 
