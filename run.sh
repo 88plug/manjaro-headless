@@ -70,9 +70,10 @@ yes | pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-p
 echo "Make .ssh folder for keys"
 mkdir ~/.ssh 
 echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban"
-yes | pacman -Sy docker docker-compose glances htop bmon jq whois yay ufw fail2ban git
+yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git
 echo "Install base-devel"
 yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
+timedatectl set-ntp true
 echo "Docker user setup"
 groupadd docker
 usermod -aG docker $(cat user.log)
