@@ -7,7 +7,7 @@ fi
 if [ -f ./notice.log ]; then
   echo "Skipping notice"
 else
-ehco "READ THIS ..."
+echo "READ THIS ..."
 echo "Let's get it going...sit back, this will take a few minutes to update and reboot the machine twice. Don't worry we already took care of resuming the process after the first reboot ;)."
 echo "SSH will be enabled on the host and the console will not show any display during the reboot process.  There is potential you will have no display at all available.  Be prepared with SSH."
 echo "Once the installer finishes, login with ssh to the new headless machine with the user you created during install."
