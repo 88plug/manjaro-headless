@@ -1,5 +1,5 @@
 # manjaro-headless
-Use manjaro linux as a headless server
+Use manjaro linux as a headless server.  This is a "one shot" installer, once it runs - your machine will be fully configured!
 
 # Upload ISO to your host
 Upload the Manjaro Minimal with XFCE ISO to Vultr or your hosting provider/server and 
