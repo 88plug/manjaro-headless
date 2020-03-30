@@ -12,6 +12,8 @@ echo "Let's get it going...sit back, this will take a few minutes to update and 
 echo "SSH will be enabled on the host and the console will not show any display during the reboot process.  There is potential you will have no display at all available.  Be prepared with SSH."
 echo "Once the installer finishes, login with ssh to the new headless machine with the user you created during install."
 sleep 30
+ip=$(ip address)
+echo "As a reminder your IP address is :\n$ip"
 echo "Do not try to login until the system reboots two times!"
 echo "This is a fully automated installer! Now sit back and relax..."
 sleep 5
