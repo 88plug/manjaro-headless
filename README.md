@@ -17,7 +17,7 @@ https://manjaro.org/downloads/official/xfce/
 
 ```git clone https://github.com/88plug/manjaro-headless ; cd manjaro-headless ; chmod +x run.sh ; sudo ./run.sh```
 
-# Let the machine reboot at least twice!
+# Let the machine reboot at least twice! Yes it will do it automagically :)
 
 # Need a VPS that supports custom ISO?
 
