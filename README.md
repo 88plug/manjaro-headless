@@ -19,6 +19,8 @@ https://manjaro.org/downloads/official/xfce/
 
 # Let the machine reboot at least twice! Yes it will do it automagically :)
 
+# Want more goodies?  Check out the Manjaro-Post-Install repo: https://github.com/88plug/manjaro-post-install/
+
 # Need a VPS that supports custom ISO?
 
 Get $50 of free hosting with Vultr! - Confirmed working!
