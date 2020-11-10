@@ -2,9 +2,9 @@
 Use manjaro linux as a headless server.  Upload the Manjaro minimal ISO to any VPS provider.  Setup Manjaro with a default installation and your normal user account via the console of your VPS. This is a "one shot" installer, once it runs - your machine will be fully configured!
 
 # Requirements
-VPS provider with Console support
-VPS provider with ISO upload image support (.iso)
-Time
+- VPS provider with Console support
+- VPS provider with ISO upload image support (.iso)
+- Time
 
 # Upload ISO to your host
 Upload the Manjaro Minimal with XFCE ISO to Vultr or your hosting provider/server and 
