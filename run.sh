@@ -68,8 +68,15 @@ if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
 else
 echo "Enable SSH"
 systemctl enable sshd.service; systemctl start sshd.service
+echo "Detecting GUI"
+
+if [ $(xfce4-panel --version) ]; then
 echo "Removing GUI"
 yes | pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager
+else
+echo "XFCE not found!  No GUI Removed"
+fi
+
 echo "Make .ssh folder for keys"
 mkdir ~/.ssh 
 echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban"
