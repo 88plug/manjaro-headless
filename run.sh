@@ -76,11 +76,20 @@ else
   systemctl start sshd.service
   echo "Detecting GUI"
 
+# Check for XFCE4 GUI manager, if found remove it
 if [ $(xfce4-panel --version) ]; then
   echo "Removing GUI"
   yes | pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager
 else
   echo "XFCE not found!  No GUI Removed"
+fi
+
+# Check for GNOME GUI manager, if found remove it
+if [ $(gnome-session --version) ]; then
+  echo "Removing GNOME GUI"
+  yes | pacman -Rs gnome-shell gnome-terminal gnome-control-center gnome-backgrounds gnome-calculator gnome-disk-utility gnome-keyring gnome-logs gnome-menus gnome-online-accounts gnome-settings-daemon gnome-shell-extensions gnome-software-packagekit-plugin gnome-software packagekit packagekit-qt5 polkit-gnome seahorse vino xdg-user-dirs-gtk
+else
+  echo "GNOME not found! No GUI Removed"
 fi
 
 echo "Make .ssh folder for keys"
