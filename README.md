@@ -7,6 +7,20 @@ The manjaro-headless script is designed to help users set up a headless server u
 - VPS provider with ISO upload image support (.iso)
 - Time
 
+## 🔧 Features
+
+    Updates system packages and mirrors using pacman-mirrors.
+    Sets up a reboot service to resume the installation after the first reboot.
+    Enables SSH for remote access.
+    Removes XFCE4 or GNOME GUI if detected.
+    Installs Docker, Docker Compose, glances, htop, bmon, jq, whois, yay, ufw, and fail2ban.
+    Configures Docker and adds the current user to the docker group.
+    Sets up firewall rules and limits SSH access.
+    Rotates logs to manage disk space.
+    Sets up a fail2ban jail for SSH attempts.
+    Starts and enables fail2ban and Docker services.
+    Performs a final system reboot.
+
 ## 💾 Installation:
 1. Download the Manjaro Minimal with XFCE ISO from https://manjaro.org/downloads/official/xfce/.
 2. Upload the ISO to your VPS provider or server, such as Vultr, and use the host console to install with default options, including a normal user and password.
@@ -18,10 +32,9 @@ cd manjaro-headless
 chmod +x run.sh
 sudo ./run.sh
 ```
-
 The script will update and reboot the machine twice, and enable SSH on the host. After the installation is complete, you can log in to the new headless machine with the user you created during the install. 
 
-4. Let the machine reboot at least twice. Yes, it will do it automatically! 🤖
+4. Let the machine reboot at least twice. Yes, it will do it automatically! 🤖  
 
 ## 🎁 Optional Add-ons:
 - Check out the Manjaro-Post-Install repo at https://github.com/88plug/manjaro-post-install/ for more goodies.
