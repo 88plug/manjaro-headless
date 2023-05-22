@@ -76,18 +76,29 @@ else
   systemctl start sshd.service
   echo "Detecting GUI"
 
+# Function to remove packages safely
+remove_packages() {
+  for package in "$@"; do
+    if pacman -Qi "$package" &>/dev/null; then
+      yes | pacman -Rs "$package"
+    else
+      echo "Package $package does not exist. Skipping."
+    fi
+  done
+}
+
 # Check for XFCE4 GUI manager, if found remove it
-if [ $(xfce4-panel --version) ]; then
-  echo "Removing GUI"
-  yes | pacman -Rs xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager
+if xfce4-panel --version &>/dev/null; then
+  echo "Removing XFCE4 GUI"
+  remove_packages xfce4 gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager
 else
-  echo "XFCE not found!  No GUI Removed"
+  echo "XFCE4 not found! No GUI Removed"
 fi
 
 # Check for GNOME GUI manager, if found remove it
-if [ $(gnome-session --version) ]; then
+if gnome-session --version &>/dev/null; then
   echo "Removing GNOME GUI"
-  yes | pacman -Rs gnome-shell gnome-terminal gnome-control-center gnome-backgrounds gnome-calculator gnome-disk-utility gnome-keyring gnome-logs gnome-menus gnome-online-accounts gnome-settings-daemon gnome-shell-extensions gnome-software-packagekit-plugin gnome-software packagekit packagekit-qt5 polkit-gnome seahorse vino xdg-user-dirs-gtk
+  remove_packages gnome-shell gnome-terminal gnome-control-center gnome-backgrounds gnome-calculator gnome-disk-utility gnome-keyring gnome-logs gnome-menus gnome-online-accounts gnome-settings-daemon gnome-shell-extensions gnome-software-packagekit-plugin gnome-software packagekit packagekit-qt5 polkit-gnome seahorse vino xdg-user-dirs-gtk
 else
   echo "GNOME not found! No GUI Removed"
 fi
