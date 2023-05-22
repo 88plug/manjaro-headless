@@ -26,6 +26,9 @@ fi
 if [ -f /var/lib/pacman/db.lck ]; then
   echo "Cannot continue until pacman is done with updates, please run again after background updates have completed."
   exit
+else
+  #Get fresh mirrors
+  pacman-mirrors --geoip
 fi
 
 # Check if reboot service configuration is already installed
@@ -49,8 +52,8 @@ WantedBy=default.target
 EOT
   echo "Enabling 88plug reboot service"
   systemctl enable 88plug.service
-  echo "Updating mirrors and Manjaro"
-  pacman-mirrors --geoip ; yes | pacman -Syyu
+  echo "Updating Manjaro"
+  yes | pacman -Syyu
   u=$(logname)
   echo "${u}" > user.log
   echo "Remember current user $u before reboot"
