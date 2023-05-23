@@ -101,9 +101,6 @@ echo "wireguard" >> /etc/modules
 
 echo "Rotating logs at 50M"
 sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journald.conf
-echo "5 seconds for restart limit"
-sed -i 's/#DefaultTimeoutStopSec=/DefaultTimeoutStopSec=5s/' /etc/systemd/system.conf 
-systemctl daemon-reload
 
 echo "Set time to use NTP"
 timedatectl set-ntp true
@@ -145,8 +142,11 @@ echo "Starting time sync"
 systemctl start ntpd.service
 systemctl enable ntpd.service
 
+echo "Update systemctl daemon"
+systemctl daemon-reload
+
 echo "Enable UFW"
-ufw enable
+sleep 2 ; ufw --force enable
 
 echo "Rebooting ..."
 reboot now
