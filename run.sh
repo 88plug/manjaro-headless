@@ -28,7 +28,7 @@ if [ -f /var/lib/pacman/db.lck ]; then
   exit
 else
   #Get fresh mirrors
-  pacman-mirrors --geoip
+  pacman-mirrors ; pacman-mirrors -f15
   echo "Updating Manjaro"
   yes | pacman -Syyu
   u=$(logname)
