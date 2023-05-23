@@ -16,8 +16,9 @@ if [[ -f ./notice.log ]]; then
 else
   read -r -d '' notice_message <<EOF
 READ THIS ...
-Let's get it going... Sit back, this will take a few minutes to update and reboot the machine twice. Don't worry, we've taken care of resuming the process after the first reboot ;).
-SSH will be enabled on the host, and the console will not show any display during the reboot process. There is a potential that you will have no display at all available. Be prepared with SSH.
+Let's get it going... Sit back, this will take a few minutes to update and reboot the machine. 
+SSH will be enabled on the host, and the console will not show any display during the reboot process. 
+There is a potential that you will have no display at all available. Be prepared with SSH.
 Once the installer finishes, log in with SSH to the new headless machine using the user you created during installation.
 
 Do not try to log in until the system reboots.
@@ -28,7 +29,7 @@ $(ip address)
 
 EOF
 echo "$notice_message"
-sleep 15
+sleep 20
 pacman-mirrors ; pacman-mirrors -f15
 u=$(logname)
 echo "${u}" > user.log
@@ -89,7 +90,7 @@ fi
 # Section 4: Package Installation #
 ######################################
 
-echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl"
+echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl wireguard-tools"
 yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools
 
 echo "Install base-devel"
@@ -140,11 +141,17 @@ echo "Starting and enabling Docker service"
 systemctl start docker.service
 systemctl enable docker.service
 
+echo "Enable UFW"
+ufw --force enable
+
+echo "Adding wireguard to kernel modules"
+echo "wireguard" >> /etc/modules
+
 ####################################
 # Section 7: Rebooting #
 ####################################
 
-echo "Rebooting for the last time..."
-ufw --force enable
-echo "You can log in after this reboot. Don't forget to set your hostname with: sudo hostnamectl set-hostname deathstar"
+echo "Rebooting ..."
+sleep 5
+
 reboot now
