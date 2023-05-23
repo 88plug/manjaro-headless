@@ -96,6 +96,9 @@ ufw allow ssh
 echo "Limiting SSH"
 ufw limit ssh
 
+echo "Enable UFW"
+ufw --force enable
+
 echo "Adding wireguard to kernel modules"
 echo "wireguard" >> /etc/modules
 
@@ -131,22 +134,16 @@ bantime   = 52w
 EOF
 
 echo "Starting and enabling the jail/fail2ban service"
-systemctl start fail2ban.service
 systemctl enable fail2ban.service
 
 echo "Starting and enabling Docker service"
-systemctl start docker.service
 systemctl enable docker.service
 
 echo "Starting time sync"
-systemctl start ntpd.service
 systemctl enable ntpd.service
 
 echo "Update systemctl daemon"
 systemctl daemon-reload
-
-echo "Enable UFW"
-sleep 2 ; ufw --force enable
 
 echo "Rebooting ..."
 reboot now
