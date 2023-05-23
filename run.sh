@@ -16,13 +16,12 @@ if [[ -f ./notice.log ]]; then
 else
   read -r -d '' notice_message <<EOF
 READ THIS ...
-Let's get it going... Sit back, this will take a few minutes to update and reboot the machine. 
 SSH will be enabled on the host, and the console will not show any display during the reboot process. 
 There is a potential that you will have no display at all available. Be prepared with SSH.
 Once the installer finishes, log in with SSH to the new headless machine using the user you created during installation.
 
-Do not try to log in until the system reboots.
-This is a fully automated installer! Now sit back and relax...
+## Do not try to log in until the system reboots.
+## This is a fully automated installer! Now sit back and relax...
 
 As a reminder, your IP address is:
 $(ip address)
@@ -103,19 +102,22 @@ ufw allow ssh
 echo "Limiting SSH"
 ufw limit ssh
 
+echo "Adding wireguard to kernel modules"
+echo "wireguard" >> /etc/modules
+
 echo "Rotating logs at 50M"
 sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journald.conf
+
+timedatectl set-ntp true
 
 ####################################
 # Section 5: Package Updates #
 ####################################
 
-#echo "Install base-devel"
-#yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
-#echo "Updating Packages"
-#yes | pacman -Syyu
-#timedatectl set-ntp true
-
+echo "Install base-devel and packages to build with"
+yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
+echo "Updating Packages"
+yes | pacman -Syyu
 
 ######################################
 # Section 6: Final Configuration #
@@ -141,11 +143,12 @@ echo "Starting and enabling Docker service"
 systemctl start docker.service
 systemctl enable docker.service
 
+echo "Starting time sync"
+systemctl start ntpd.service
+systemctl enable ntpd.service
+
 echo "Enable UFW"
 ufw --force enable
-
-echo "Adding wireguard to kernel modules"
-echo "wireguard" >> /etc/modules
 
 ####################################
 # Section 7: Rebooting #
