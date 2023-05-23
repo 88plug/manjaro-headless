@@ -93,10 +93,6 @@ fi
 echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl wireguard-tools"
 yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools
 
-echo "Install base-devel"
-yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
-timedatectl set-ntp true
-
 echo "Setting up Docker user"
 groupadd docker
 usermod -aG docker "$(cat user.log)"
@@ -114,8 +110,12 @@ sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journal
 # Section 5: Package Updates #
 ####################################
 
-echo "Updating Packages"
-yes | pacman -Syyu
+#echo "Install base-devel"
+#yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
+#echo "Updating Packages"
+#yes | pacman -Syyu
+#timedatectl set-ntp true
+
 
 ######################################
 # Section 6: Final Configuration #
