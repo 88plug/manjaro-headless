@@ -1,48 +1,57 @@
 #!/bin/bash
+
+####################################
+# Section 1: Pre-Installation Steps #
+####################################
+
 # Check if this script is run as root
-if [ "$EUID" -ne 0 ]; then
+if [[ $EUID -ne 0 ]]; then
   echo "Please run as root: sudo ./run.sh"
-  exit
+  exit 1
 fi
 
 # Show notice only once
-if [ -f ./notice.log ]; then
+if [[ -f ./notice.log ]]; then
   echo "Skipping notice"
 else
-  echo "READ THIS ..."
-  echo "Let's get it going...sit back, this will take a few minutes to update and reboot the machine twice. Don't worry we already took care of resuming the process after the first reboot ;)."
-  echo "SSH will be enabled on the host and the console will not show any display during the reboot process.  There is potential you will have no display at all available.  Be prepared with SSH."
-  echo "Once the installer finishes, login with ssh to the new headless machine with the user you created during install."
+  read -r -d '' notice_message <<EOF
+READ THIS ...
+Let's get it going... Sit back, this will take a few minutes to update and reboot the machine twice. Don't worry, we've taken care of resuming the process after the first reboot ;).
+SSH will be enabled on the host, and the console will not show any display during the reboot process. There is a potential that you will have no display at all available. Be prepared with SSH.
+Once the installer finishes, log in with SSH to the new headless machine using the user you created during installation.
+
+As a reminder, your IP address is:
+$(ip address)
+
+Do not try to log in until the system reboots two times!
+This is a fully automated installer! Now sit back and relax...
+EOF
+  echo "$notice_message"
   sleep 30
-  ip=$(ip address)
-  echo "As a reminder your IP address is :\n$ip"
-  echo "Do not try to login until the system reboots two times!"
-  echo "This is a fully automated installer! Now sit back and relax..."
-  sleep 5
   touch notice.log
 fi
 
+#######################################
+# Section 2: System Configuration #
+#######################################
+
 # Check if pacman is running
-if [ -f /var/lib/pacman/db.lck ]; then
-  echo "Cannot continue until pacman is done with updates, please run again after background updates have completed."
-  exit
-else
-  #Get fresh mirrors
-  pacman-mirrors ; pacman-mirrors -f15
-  echo "Updating Manjaro"
-  yes | pacman -Syyu
-  u=$(logname)
-  echo "${u}" > user.log
-  echo "Remember current user $u before reboot"
+if [[ -f /var/lib/pacman/db.lck ]]; then
+  echo "Cannot continue until pacman is done with updates. Please run again after background updates have completed."
+  exit 1
 fi
 
-echo "Make .ssh folder for keys"
-mkdir ~/.ssh 
+echo "Creating .ssh directory for keys"
+mkdir -p ~/.ssh
 
-echo "Enable SSH"
+echo "Enabling SSH"
 systemctl enable sshd.service
 systemctl start sshd.service
 echo "Detecting GUI"
+
+#####################################
+# Section 3: GUI Removal (if found) #
+#####################################
 
 # Function to remove packages safely
 remove_packages() {
@@ -71,29 +80,36 @@ else
   echo "GNOME not found! No GUI Removed"
 fi
 
+######################################
+# Section 4: Package Installation #
+######################################
 
-echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl"
-yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl
-
-echo "Install base-devel"
-yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
-timedatectl set-ntp true
-
-echo "Docker user setup"
+echo "Setting up Docker user"
 groupadd docker
-usermod -aG docker $(cat user.log)
+usermod -aG docker "$(cat user.log)"
 
-echo "Allow SSH"
+echo "Allowing SSH"
 ufw allow ssh
 
-echo "Limit SSH"
+echo "Limiting SSH"
 ufw limit ssh
 
-echo "Rotate logs at 50M"
+echo "Rotating logs at 50M"
 sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journald.conf
 
-echo "Setup jail for naughty SSH attempts"
-cat <<EOT > /etc/fail2ban/jail.d/sshd.local
+####################################
+# Section 5: Package Updates #
+####################################
+
+echo "Updating Packages"
+yes | pacman -Syu
+
+######################################
+# Section 6: Final Configuration #
+######################################
+
+echo "Setting up jail for naughty SSH attempts"
+cat <<EOF > /etc/fail2ban/jail.d/sshd.local
 [sshd]
 enabled   = true
 filter    = sshd
@@ -102,17 +118,21 @@ backend   = systemd
 maxretry  = 5
 findtime  = 1d
 bantime   = 52w
-EOT
+EOF
 
-echo "Starting and enabling the jail/fail2ban"
+echo "Starting and enabling the jail/fail2ban service"
 systemctl start fail2ban.service
 systemctl enable fail2ban.service
 
-echo "Starting and enabling the docker"
+echo "Starting and enabling Docker service"
 systemctl start docker.service
 systemctl enable docker.service
 
+####################################
+# Section 7: Rebooting #
+####################################
+
 echo "Rebooting for the last time..."
 ufw --force enable
-echo "You can login after this reboot - don't forget to set your hostname with : sudo hostnamectl set-hostname deathstar"
+echo "You can log in after this reboot. Don't forget to set your hostname with: sudo hostnamectl set-hostname deathstar"
 reboot now
