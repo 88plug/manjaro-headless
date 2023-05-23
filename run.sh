@@ -27,9 +27,15 @@ As a reminder, your IP address is:
 $(ip address)
 
 EOF
-  echo "$notice_message"
-  sleep 30
-  touch notice.log
+echo "$notice_message"
+sleep 15
+pacman-mirrors ; pacman-mirrors -f15
+echo "Updating Manjaro"
+yes | pacman -Syyu
+u=$(logname)
+echo "${u}" > user.log
+echo "Remember current user $u before reboot"
+touch notice.log
 fi
 
 #######################################
@@ -85,6 +91,13 @@ fi
 # Section 4: Package Installation #
 ######################################
 
+echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl"
+yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl
+
+echo "Install base-devel"
+yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
+timedatectl set-ntp true
+
 echo "Setting up Docker user"
 groupadd docker
 usermod -aG docker "$(cat user.log)"
@@ -103,7 +116,7 @@ sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journal
 ####################################
 
 echo "Updating Packages"
-yes | pacman -Syu
+yes | pacman -Syyu
 
 ######################################
 # Section 6: Final Configuration #
