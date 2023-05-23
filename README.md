@@ -3,6 +3,7 @@
 The manjaro-headless script is designed to help users set up a headless server using Manjaro Linux. By uploading the Manjaro XFCE minimal ISO to any VPS provider that supports console and ISO upload image, you can configure your server with a default installation and your normal user account via the console of your VPS. This is a one-shot installer, meaning that once it runs, your machine will be fully configured. 🎉
 
 ## 📝 Requirements:
+- 8GB Disk 
 - VPS provider with console support
 - VPS provider with ISO upload image support (.iso)
 - Time
