@@ -36,23 +36,13 @@ else
   echo "Remember current user $u before reboot"
 fi
 
+echo "Make .ssh folder for keys"
+mkdir ~/.ssh 
 
-# Check if fail2ban is already installed
-if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
-  echo "Succesfully installed all packages"
-  yes | pacman -Scc
-  yes | pacman -Rns $(pacman -Qtdq)
-  journalctl --vacuum-size=50M
-  rm *.log
-  systemctl disable 88plug.service
-  systemctl stop 88plug.service
-  rm /etc/systemd/system/88plug.service
-  echo "88plug cleaned up."
-else
-  echo "Enable SSH"
-  systemctl enable sshd.service
-  systemctl start sshd.service
-  echo "Detecting GUI"
+echo "Enable SSH"
+systemctl enable sshd.service
+systemctl start sshd.service
+echo "Detecting GUI"
 
 # Function to remove packages safely
 remove_packages() {
@@ -81,8 +71,6 @@ else
   echo "GNOME not found! No GUI Removed"
 fi
 
-echo "Make .ssh folder for keys"
-mkdir ~/.ssh 
 
 echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl"
 yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl
