@@ -30,8 +30,6 @@ EOF
 echo "$notice_message"
 sleep 15
 pacman-mirrors ; pacman-mirrors -f15
-echo "Updating Manjaro"
-yes | pacman -Syyu
 u=$(logname)
 echo "${u}" > user.log
 echo "Remember current user $u before reboot"
