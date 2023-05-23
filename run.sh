@@ -29,38 +29,13 @@ if [ -f /var/lib/pacman/db.lck ]; then
 else
   #Get fresh mirrors
   pacman-mirrors --geoip
-fi
-
-# Check if reboot service configuration is already installed
-if [ -f /etc/systemd/system/88plug.service ]; then
-  echo "Found reboot service configuration already installed."
-else
-  location=$(pwd)
-  echo "${location}" > location.log
-  echo "Setup installer for reboots"
-  echo "Using $location location for this install"
-  cat <<EOT > /etc/systemd/system/88plug.service
-[Unit]
-Requires=network-online.target systemd-networkd-wait-online.service
-After=network-online.target systemd-networkd-wait-online.service
-[Service]
-WorkingDirectory=$location
-ExecStart=$location/run.sh
-User=root
-[Install]
-WantedBy=default.target
-EOT
-  echo "Enabling 88plug reboot service"
-  systemctl enable 88plug.service
   echo "Updating Manjaro"
   yes | pacman -Syyu
   u=$(logname)
   echo "${u}" > user.log
   echo "Remember current user $u before reboot"
-  echo "Rebooting now..."
-  sleep 5
-  reboot now
 fi
+
 
 # Check if fail2ban is already installed
 if [ -f /etc/fail2ban/jail.d/sshd.local ]; then
@@ -83,7 +58,7 @@ else
 remove_packages() {
   for package in "$@"; do
     if pacman -Qi "$package" &>/dev/null; then
-      yes | pacman -Rs "$package"
+      yes | pacman -Rcns "$package"
     else
       echo "Package $package does not exist. Skipping."
     fi
@@ -109,8 +84,8 @@ fi
 echo "Make .ssh folder for keys"
 mkdir ~/.ssh 
 
-echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban"
-yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git
+echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl"
+yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl
 
 echo "Install base-devel"
 yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
@@ -153,4 +128,3 @@ echo "Rebooting for the last time..."
 ufw --force enable
 echo "You can login after this reboot - don't forget to set your hostname with : sudo hostnamectl set-hostname deathstar"
 reboot now
-fi
