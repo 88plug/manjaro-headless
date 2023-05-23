@@ -10,6 +10,11 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
+if [[ -f /var/lib/pacman/db.lck ]]; then
+  echo "Cannot continue until pacman is done with updates. Please run again after background updates have completed."
+  exit 1
+fi
+
 # Show notice only once
 if [[ -f ./notice.log ]]; then
   echo "Skipping notice"
@@ -36,26 +41,8 @@ echo "Remember current user $u before reboot"
 touch notice.log
 fi
 
-#######################################
-# Section 2: System Configuration #
-#######################################
-
-# Check if pacman is running
-if [[ -f /var/lib/pacman/db.lck ]]; then
-  echo "Cannot continue until pacman is done with updates. Please run again after background updates have completed."
-  exit 1
-fi
-
-echo "Creating .ssh directory for keys"
-mkdir -p ~/.ssh
-
-echo "Enabling SSH"
-systemctl enable sshd.service
-systemctl start sshd.service
-echo "Detecting GUI"
-
 #####################################
-# Section 3: GUI Removal (if found) #
+# Section 2: GUI Removal (if found) #
 #####################################
 
 # Function to remove packages safely
@@ -86,15 +73,22 @@ else
 fi
 
 ######################################
-# Section 4: Package Installation #
+# Section 3: Package Installation #
 ######################################
 
-echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl wireguard-tools"
+echo "Install goodies | ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools"
 yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools
 
 echo "Setting up Docker user"
 groupadd docker
 usermod -aG docker "$(cat user.log)"
+
+echo "Creating .ssh directory for keys"
+mkdir -p ~/.ssh
+
+echo "Enabling SSH"
+systemctl enable sshd.service
+systemctl start sshd.service
 
 echo "Allowing SSH"
 ufw allow ssh
@@ -107,11 +101,15 @@ echo "wireguard" >> /etc/modules
 
 echo "Rotating logs at 50M"
 sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journald.conf
+echo "5 seconds for restart limit"
+sed -i 's/#DefaultTimeoutStopSec=/DefaultTimeoutStopSec=5s/' /etc/systemd/system.conf 
+systemctl daemon-reload
 
+echo "Set time to use NTP"
 timedatectl set-ntp true
 
 ####################################
-# Section 5: Package Updates #
+# Section 4: Package Updates #
 ####################################
 
 echo "Install base-devel and packages to build with"
@@ -120,7 +118,7 @@ echo "Updating Packages"
 yes | pacman -Syyu
 
 ######################################
-# Section 6: Final Configuration #
+# Section 5: Final Configuration #
 ######################################
 
 echo "Setting up jail for naughty SSH attempts"
@@ -148,13 +146,7 @@ systemctl start ntpd.service
 systemctl enable ntpd.service
 
 echo "Enable UFW"
-ufw --force enable
-
-####################################
-# Section 7: Rebooting #
-####################################
+ufw enable
 
 echo "Rebooting ..."
-sleep 5
-
 reboot now
