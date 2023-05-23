@@ -10,10 +10,9 @@ The manjaro-headless script is designed to help users set up a headless server u
 ## 🔧 Features
 
     Updates system packages and mirrors using pacman-mirrors.
-    Sets up a reboot service to resume the installation after the first reboot.
     Enables SSH for remote access.
     Removes XFCE4 or GNOME GUI if detected.
-    Installs Docker, Docker Compose, glances, htop, bmon, jq, whois, yay, ufw, and fail2ban.
+    Installs Docker, Docker Compose, glances, htop, bmon, jq, whois, yay, ufw, wireguard kernel module, lvm2, and fail2ban.
     Configures Docker and adds the current user to the docker group.
     Sets up firewall rules and limits SSH access.
     Rotates logs to manage disk space.
@@ -29,12 +28,11 @@ The manjaro-headless script is designed to help users set up a headless server u
 ```
 git clone https://github.com/88plug/manjaro-headless
 cd manjaro-headless
-chmod +x run.sh
 sudo ./run.sh
 ```
-The script will update and reboot the machine twice, and enable SSH on the host. After the installation is complete, you can log in to the new headless machine with the user you created during the install. 
+The script will update and reboot the machine and enable SSH on the host. After the installation is complete, you can log in to the new headless machine with the user you created during the install. 
 
-4. Let the machine reboot at least twice. Yes, it will do it automatically! 🤖  
+4. Let the machine reboot. Yes, it will do it automatically! 🤖  
 
 ## 🎁 Optional Add-ons:
 - Check out the Manjaro-Post-Install repo at https://github.com/88plug/manjaro-post-install/ for more goodies.
