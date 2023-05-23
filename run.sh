@@ -20,11 +20,12 @@ Let's get it going... Sit back, this will take a few minutes to update and reboo
 SSH will be enabled on the host, and the console will not show any display during the reboot process. There is a potential that you will have no display at all available. Be prepared with SSH.
 Once the installer finishes, log in with SSH to the new headless machine using the user you created during installation.
 
+Do not try to log in until the system reboots.
+This is a fully automated installer! Now sit back and relax...
+
 As a reminder, your IP address is:
 $(ip address)
 
-Do not try to log in until the system reboots two times!
-This is a fully automated installer! Now sit back and relax...
 EOF
   echo "$notice_message"
   sleep 30
