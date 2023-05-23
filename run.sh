@@ -93,7 +93,7 @@ echo "Install goodies | docker docker-compose glances htop bmon jq whois yay ufw
 yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools
 
 echo "Install base-devel"
-yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which linux linux-headers
+yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
 timedatectl set-ntp true
 
 echo "Setting up Docker user"
