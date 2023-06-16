@@ -76,8 +76,8 @@ fi
 # Section 3: Package Installation #
 ######################################
 
-echo "Install goodies | ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools"
-yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools
+echo "Install goodies | ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh"
+yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh
 
 echo "Setting up Docker user"
 groupadd docker
