@@ -47,23 +47,24 @@ EOF
   # Prompt the user until they provide a valid response
   valid_response=false
   while ! $valid_response; do
-    read -r -p "Do you want to display the notice? [y/n]: " display_notice_choice
-    display_notice_choice=${display_notice_choice,,} # Convert the choice to lowercase
+    read -r -p "Do you want to install Docker? [y/n]: " install_docker_choice
+    install_docker_choice=${install_docker_choice,,} # Convert the choice to lowercase
 
-    case $display_notice_choice in
+    case $install_docker_choice in
       y|yes)
         valid_response=true
         display_notice
         ;;
       n|no)
         valid_response=true
-        echo "Skipping notice"
+        echo "Skipping Docker"
         ;;
       *)
         echo "Invalid response. Please answer with 'y' or 'n'."
         ;;
     esac
   done
+display_notice
 fi
 
 #####################################
