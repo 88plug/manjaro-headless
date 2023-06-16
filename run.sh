@@ -19,9 +19,11 @@ fi
 if [[ -f ./notice.log ]]; then
   echo "Skipping notice"
 else
-  read -r -d '' notice_message <<EOF
+  # Function to display the notice message
+  display_notice() {
+    read -r -d '' notice_message <<EOF
 READ THIS ...
-SSH will be enabled on the host, and the console will not show any display during the reboot process. 
+SSH will be enabled on the host, and the console will not show any display during the reboot process.
 There is a potential that you will have no display at all available. Be prepared with SSH.
 Once the installer finishes, log in with SSH to the new headless machine using the user you created during installation.
 
@@ -32,13 +34,36 @@ As a reminder, your IP address is:
 $(ip address)
 
 EOF
-echo "$notice_message"
-sleep 20
-pacman-mirrors ; pacman-mirrors -f15
-u=$(logname)
-echo "${u}" > user.log
-echo "Remember current user $u before reboot"
-touch notice.log
+    echo "$notice_message"
+    sleep 20
+    pacman-mirrors
+    pacman-mirrors -f15
+    u=$(logname)
+    echo "${u}" > user.log
+    echo "Remember current user $u before reboot"
+    touch notice.log
+  }
+
+  # Prompt the user until they provide a valid response
+  valid_response=false
+  while ! $valid_response; do
+    read -r -p "Do you want to display the notice? [y/n]: " display_notice_choice
+    display_notice_choice=${display_notice_choice,,} # Convert the choice to lowercase
+
+    case $display_notice_choice in
+      y|yes)
+        valid_response=true
+        display_notice
+        ;;
+      n|no)
+        valid_response=true
+        echo "Skipping notice"
+        ;;
+      *)
+        echo "Invalid response. Please answer with 'y' or 'n'."
+        ;;
+    esac
+  done
 fi
 
 #####################################
@@ -76,12 +101,25 @@ fi
 # Section 3: Package Installation #
 ######################################
 
-echo "Install goodies | ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh"
-yes | pacman -Sy ntp docker docker-compose glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh
+echo "Install goodies | ntp glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh"
+yes | pacman -Sy ntp glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh
 
-echo "Setting up Docker user"
-groupadd docker
-usermod -aG docker "$(cat user.log)"
+# Function to install Docker and related packages
+install_docker() {
+  echo "Installing Docker and Docker Compose"
+  yes | pacman -Sy docker docker-compose
+
+  echo "Setting up Docker user"
+  groupadd docker
+  usermod -aG docker "$(cat user.log)"
+}
+
+# Ask the user if they want to install Docker
+if [[ $install_docker_choice =~ ^[Yy]$ ]]; then
+  install_docker
+else
+  echo "Skipping Docker installation"
+fi
 
 echo "Creating .ssh directory for keys"
 mkdir -p ~/.ssh
@@ -136,8 +174,10 @@ EOF
 echo "Starting and enabling the jail/fail2ban service"
 systemctl enable fail2ban.service
 
-echo "Starting and enabling Docker service"
-systemctl enable docker.service
+if [[ $install_docker_choice =~ ^[Yy]$ ]]; then
+  echo "Starting and enabling Docker service"
+  systemctl enable docker.service
+fi
 
 echo "Starting time sync"
 systemctl enable ntpd.service
