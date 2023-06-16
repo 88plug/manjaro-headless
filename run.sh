@@ -1,27 +1,20 @@
 #!/bin/bash
 
-####################################
-# Section 1: Pre-Installation Steps #
-####################################
-
 # Check if this script is run as root
 if [[ $EUID -ne 0 ]]; then
   echo "Please run as root: sudo ./run.sh"
   exit 1
 fi
 
+# Check if pacman is running updates
 if [[ -f /var/lib/pacman/db.lck ]]; then
   echo "Cannot continue until pacman is done with updates. Please run again after background updates have completed."
   exit 1
 fi
 
-# Show notice only once
-if [[ -f ./notice.log ]]; then
-  echo "Skipping notice"
-else
-  # Function to display the notice message
-  display_notice() {
-    read -r -d '' notice_message <<EOF
+# Display notice message
+display_notice() {
+  read -r -d '' notice_message <<EOF
 READ THIS ...
 SSH will be enabled on the host, and the console will not show any display during the reboot process.
 There is a potential that you will have no display at all available. Be prepared with SSH.
@@ -34,42 +27,27 @@ As a reminder, your IP address is:
 $(ip address)
 
 EOF
-    echo "$notice_message"
-    sleep 20
-    pacman-mirrors
-    pacman-mirrors -f15
-    u=$(logname)
-    echo "${u}" > user.log
-    echo "Remember current user $u before reboot"
-    touch notice.log
-  }
+  echo "$notice_message"
+  sleep 20
+  pacman-mirrors
+  pacman-mirrors -f15
+  u=$(logname)
+  echo "${u}" > user.log
+  echo "Remember current user $u before reboot"
+  touch notice.log
+}
 
-  # Prompt the user until they provide a valid response
-  valid_response=false
-  while ! $valid_response; do
-    read -r -p "Do you want to install Docker? [y/n]: " install_docker_choice
-    install_docker_choice=${install_docker_choice,,} # Convert the choice to lowercase
+# Check if Docker installation is requested
+install_docker_choice=""
+while [[ ! "$install_docker_choice" =~ ^(y|n)$ ]]; do
+  read -r -p "Do you want to install Docker? [y/n]: " install_docker_choice
+  install_docker_choice=${install_docker_choice,,} # Convert the choice to lowercase
+done
 
-    case $install_docker_choice in
-      y|yes)
-        valid_response=true
-        display_notice
-        ;;
-      n|no)
-        valid_response=true
-        echo "Skipping Docker"
-        ;;
-      *)
-        echo "Invalid response. Please answer with 'y' or 'n'."
-        ;;
-    esac
-  done
-display_notice
+# Execute notice display only if Docker installation is chosen
+if [[ ! -f ./notice.log ]]; then
+  display_notice
 fi
-
-#####################################
-# Section 2: GUI Removal (if found) #
-#####################################
 
 # Function to remove packages safely
 remove_packages() {
@@ -82,85 +60,73 @@ remove_packages() {
   done
 }
 
-# Check for XFCE4 GUI manager, if found remove it
+# Remove XFCE4 GUI if found
 if xfce4-panel --version &>/dev/null; then
   echo "Removing XFCE4 GUI"
   remove_packages xfce4 wayland gtkhash-thunar libxfce4ui mousepad orage thunar-archive-plugin thunar-media-tags-plugin xfce4-panel xfce4-battery-plugin xfce4-clipman-plugin xfce4-pulseaudio-plugin xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-xkb-plugin parole xfce4-notifyd lightdm light-locker lightdm-gtk-greeter lightdm-gtk-greeter-settings modemmanager
 else
-  echo "XFCE4 not found! No GUI Removed"
+  echo "XFCE4 not found! No GUI removed"
 fi
 
-# Check for GNOME GUI manager, if found remove it
+# Remove GNOME GUI if found
 if gnome-session --version &>/dev/null; then
   echo "Removing GNOME GUI"
   remove_packages gnome gnome-session gnome-shell wayland gnome-terminal gnome-control-center gnome-backgrounds gnome-calculator gnome-disk-utility gnome-keyring gnome-logs gnome-menus gnome-online-accounts gnome-settings-daemon gnome-shell-extensions gnome-software-packagekit-plugin gnome-software packagekit packagekit-qt5 polkit-gnome seahorse vino xdg-user-dirs-gtk
 else
-  echo "GNOME not found! No GUI Removed"
+  echo "GNOME not found! No GUI removed"
 fi
 
-######################################
-# Section 3: Package Installation #
-######################################
-
-echo "Install goodies | ntp glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh"
+# Install necessary packages
+echo "Installing packages: ntp glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh"
 yes | pacman -Sy ntp glances htop bmon jq whois yay ufw fail2ban git kubectl lvm2 wireguard-tools openssh
 
-# Function to install Docker and related packages
-install_docker() {
+# Install Docker and related packages if chosen
+if [[ "$install_docker_choice" =~ ^[yY]$ ]]; then
   echo "Installing Docker and Docker Compose"
   yes | pacman -Sy docker docker-compose
 
   echo "Setting up Docker user"
   groupadd docker
   usermod -aG docker "$(cat user.log)"
-}
-
-# Ask the user if they want to install Docker
-if [[ $install_docker_choice =~ ^[Yy]$ ]]; then
-  install_docker
-else
-  echo "Skipping Docker installation"
 fi
 
+# Create .ssh directory for keys
 echo "Creating .ssh directory for keys"
 mkdir -p ~/.ssh
 
+# Enable and start SSH
 echo "Enabling SSH"
 systemctl enable sshd.service
 systemctl start sshd.service
 
-echo "Allowing SSH"
+# Configure UFW
+echo "Configuring UFW"
 ufw allow ssh
-
-echo "Limiting SSH"
 ufw limit ssh
-
-echo "Enable UFW"
 ufw --force enable
 
+# Add wireguard to kernel modules
 echo "Adding wireguard to kernel modules"
 echo "wireguard" >> /etc/modules
 
+# Rotate logs at 50M
 echo "Rotating logs at 50M"
 sed -i "/^#SystemMaxUse/s/#SystemMaxUse=/SystemMaxUse=50M/" /etc/systemd/journald.conf
 
-echo "Set time to use NTP"
+# Set time to use NTP
+echo "Setting time to use NTP"
 timedatectl set-ntp true
 
-####################################
-# Section 4: Package Updates #
-####################################
-
-echo "Install base-devel and packages to build with"
+# Install base-devel and packages for building
+echo "Installing base-devel and build packages"
 yes | pacman -Sy autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo systemd texinfo util-linux which
-echo "Updating Packages"
+
+# Update all packages
+echo "Updating packages"
 yes | pacman -Syyu
 
-######################################
-# Section 5: Final Configuration #
-######################################
-
-echo "Setting up jail for naughty SSH attempts"
+# Configure fail2ban for SSH
+echo "Configuring fail2ban for SSH"
 cat <<EOF > /etc/fail2ban/jail.d/sshd.local
 [sshd]
 enabled   = true
@@ -172,19 +138,21 @@ findtime  = 1d
 bantime   = 52w
 EOF
 
-echo "Starting and enabling the jail/fail2ban service"
+# Enable fail2ban and Docker services
+echo "Enabling fail2ban and Docker services"
 systemctl enable fail2ban.service
-
-if [[ $install_docker_choice =~ ^[Yy]$ ]]; then
-  echo "Starting and enabling Docker service"
+if [[ "$install_docker_choice" =~ ^[yY]$ ]]; then
   systemctl enable docker.service
 fi
 
-echo "Starting time sync"
+# Enable time sync
+echo "Enabling time sync"
 systemctl enable ntpd.service
 
-echo "Update systemctl daemon"
+# Reload systemctl daemon
+echo "Reloading systemctl daemon"
 systemctl daemon-reload
 
-echo "Rebooting ..."
+# Reboot the system
+echo "Rebooting..."
 reboot now
