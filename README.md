@@ -42,6 +42,6 @@ The script will update and reboot the machine and enable SSH on the host. After 
 - Need a VPS that supports custom ISO? Get $50 of free hosting with Vultr at https://m.do.co/c/d9874e8ceba7 or try HostHatch (NVMe supported!) at https://hosthatch.com/a?id=1577.
 
 ## 💡 Tips:
-- Remember to wait until the system reboots two times before logging in.
+- Remember to wait until the system reboots before logging in.
 - Don't worry if there is no display available during the reboot process. Be prepared with SSH.
 - After the final reboot, set your hostname with "sudo hostnamectl set-hostname YOUR-H
