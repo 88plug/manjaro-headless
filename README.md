@@ -3,7 +3,9 @@
 [Screencast of Manjaro Headless](https://raw.githubusercontent.com/88plug/manjaro-headless/master/Screencast%20of%20Manjaro%20Headless.mp4)
 
 The manjaro-headless script is designed to help users set up a headless server using Manjaro Linux. By uploading the Manjaro XFCE minimal ISO to any VPS provider that supports console and ISO upload image, you can configure your server with a default installation and your normal user account via the console of your VPS. This is a one-shot installer, meaning that once it runs, your machine will be fully configured. 🎉
-
+<!-- preserves the thumbnail & controls -->
+<video src="https://raw.githubusercontent.com/88plug/manjaro-headless/master/Screencast%20of%20Manjaro%20Headless.mp4" width="352" height="720"></video>
+<video src='https://raw.githubusercontent.com/88plug/manjaro-headless/master/Screencast%20of%20Manjaro%20Headless.mp4' width=180/>
 ## 📝 Requirements:
 - 8GB Disk 
 - VPS provider with console support
